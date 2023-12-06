@@ -12,7 +12,20 @@ public partial class FourthPage : ContentPage
         FH.DownloadAllCans();
         PoubelleListView.ItemsSource = FH.Cans;
     }
-    public bool Activate { get; set; }
+    public bool Activate {
+        get { return _Activate; }
+        set
+        {
+            if (_Activate != value)
+            {
+                _Activate = value;
+                OnPropertyChanged(nameof(Activate));
+            }
+        }
+    }
+    private bool _Activate;
+
+    [Obsolete]
     public FourthPage(User user, int role)
 	{
         Debug.WriteLine("This is poubelle : ", user.ToString());

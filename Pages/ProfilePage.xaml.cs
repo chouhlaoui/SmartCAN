@@ -53,30 +53,50 @@ public partial class ProfilePage : ContentPage
 		InitializeComponent();
         Debug.WriteLine("This is profilepage : ", user.ToString());
         Profil = user; 
-
         BindingContext = this;
-
     }
 
 
-    private void Save(object sender, EventArgs e)
+    private async void Save(object sender, EventArgs e)
     {
-        if(string.IsNullOrEmpty(pass.Text) && string.IsNullOrEmpty(passNew.Text))
+        FireHandle FH = new FireHandle();
+
+        Debug.WriteLine("Save button clicked."); // Check if this line is printed
+
+        if (string.IsNullOrEmpty(pass.Text) && string.IsNullOrEmpty(passNew.Text))
         {
-            if(string.IsNullOrEmpty(tel.Text))
+            if (!string.IsNullOrEmpty(tel.Text))
             {
                 Profil.Tel = int.Parse(tel.Text);
             }
-            if (string.IsNullOrEmpty(nom.Text))
+            if (!string.IsNullOrEmpty(nom.Text))
             {
                 Profil.Nom = nom.Text;
             }
-            if (string.IsNullOrEmpty(mail.Text))
+            if (!string.IsNullOrEmpty(mail.Text))
             {
                 Profil.Email = mail.Text;
             }
-            FireHandle FH = new FireHandle();
-            FH.addClient(Profil.Id,Profil);
+            await FH.AddClient(Profil.Id, Profil);
+        }
+        else if((!string.IsNullOrEmpty(pass.Text) && !string.IsNullOrEmpty(passNew.Text))){
+            if((passNew.Text != Profil.mdp) && (pass.Text == Profil.mdp))
+            {
+                if (!string.IsNullOrEmpty(tel.Text))
+                {
+                    Profil.Tel = int.Parse(tel.Text);
+                }
+                if (!string.IsNullOrEmpty(nom.Text))
+                {
+                    Profil.Nom = nom.Text;
+                }
+                if (!string.IsNullOrEmpty(mail.Text))
+                {
+                    Profil.Email = mail.Text;
+                }
+                Profil.mdp = passNew.Text;
+                await FH.AddClient(Profil.Id, Profil);
+            }
         }
     }
     public async void Disconnect(object sender, EventArgs e)
@@ -87,4 +107,6 @@ public partial class ProfilePage : ContentPage
             await Navigation.PopModalAsync();
         }
     }
+
+
 }

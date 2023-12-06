@@ -6,7 +6,7 @@
 
             >
     <StackLayout >
-        <VerticalStackLayout VerticalOptions="EndAndExpand" Spacing="25">
+        <VerticalStackLayout VerticalOptions="CenterAndExpand" Spacing="25">
 
             <Frame Padding="10" BorderColor="Transparent" CornerRadius="0">
                 <Grid Padding="10" ColumnDefinitions="25,*" ColumnSpacing="30">
@@ -62,17 +62,26 @@
                 </Grid>
             </Frame>
 
-            <Button VerticalOptions="EndAndExpand"
-                HorizontalOptions="Center"
-                Text="Enregistrer"
-                    Clicked="Save"
-                />
+     
+
 
         </VerticalStackLayout>
-        <Button VerticalOptions="EndAndExpand"
+        <Grid VerticalOptions="End" Padding="40" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" VerticalOptions="EndAndExpand"
+                HorizontalOptions="Center"
+                Text="Enregistrer"
+                Clicked="Save"
+                />
+            <Button Grid.Column="0" VerticalOptions="EndAndExpand"
                 HorizontalOptions="Center"
                 Text="Déconnecter"
                 Clicked="Disconnect"
                 />
+        </Grid>
+       
     </StackLayout>
 </ContentPage>

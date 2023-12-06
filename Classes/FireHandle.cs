@@ -92,15 +92,19 @@ namespace SmartCAN
             return false;
         }
 
-        public async void addClient(int id,User u)
+        public async Task<bool> AddClient(int id, User u)
         {
-            if (Users.IndexOf(u) > 0)
+            bool result = await Task.Run(() =>
             {
-                DeleteUser(id);
-            }
-            Users.Add(u);
-            await FirebaseClient.Child($"Users/Normal/{id}").PutAsync(u);
-        } 
+                DeleteUserFirebase(id);
+                Users.Add(u);
+                FirebaseClient.Child($"Users/Normal/{id}").PutAsync(u);
+                return true;
+            });
+
+            return result;
+        }
+
 
     }
 }
