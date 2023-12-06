@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenStreetMap with Pins</title>
+    <link rel='stylesheet' href='https://unpkg.com/leaflet/dist/leaflet.css' />
+    <script src='https://unpkg.com/leaflet/dist/leaflet.js'></script>
+    <!-- Use Firebase SDK version 8 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+</head>
+<body>
+    <div id='map' style='height: 100vh;'></div>
+
+    <script type="text/javascript">
+
+        (async function () {
+            const firebaseConfig = {
+                apiKey: "AIzaSyCthFE1QjA4gRW3pE2keLffqeApYXSohdc",
+                authDomain: "projet-iot-2ing2.firebaseapp.com",
+                databaseURL: "https://projet-iot-2ing2-default-rtdb.europe-west1.firebasedatabase.app",
+                projectId: "projet-iot-2ing2",
+                storageBucket: "projet-iot-2ing2.appspot.com",
+                messagingSenderId: "300486079712",
+                appId: "1:300486079712:web:2e5f435f0ce186c7038c85",
+                measurementId: "G-J98P1YMZR4"
+            };
+            firebase.initializeApp(firebaseConfig);
+            var FirebaseClient = firebase.database();
+            Cans = [];  // Assuming Cans is a global variable representing a list
+
+            async function downloadAllCans() {
+                const path = 'carte/Poubelle';
+                const Nombre_Poubelle = await FirebaseClient.ref('carte/Nombre_Poubelle').once('value').then(snapshot => snapshot.val());
+
+                for (let i = 1; i <= Nombre_Poubelle; i++) {
+                    const Poubelle = await FirebaseClient.ref(`${path}${i}`).once('value').then(snapshot => snapshot.val());
+
+                    if (Poubelle !== null) {
+                        Poubelle.Title = 'Poubelle'+i;
+                        Cans.push(Poubelle);
+                    }
+                }
+            }
+
+            await downloadAllCans();
+
+            // Afficher la liste dans la console (à des fins de débogage)
+            console.log("Liste des positions :", Cans);
+
+            // Initialiser la carte Leaflet après avoir récupéré les données Firebase
+            var map = L.map('map').setView([36.8413, 10.1951], 10);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Ajouter des marqueurs à la carte en utilisant les coordonnées de positionsList
+            Cans.forEach(function (position) {
+                L.marker([parseFloat(position.Latitude), parseFloat(position.Langitude)]).addTo(map).bindPopup(position.Title);
+            });
+        })();
+        
+    </script>
+</body>
+</html>
