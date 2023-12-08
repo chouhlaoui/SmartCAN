@@ -35,7 +35,6 @@
 
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -60,10 +59,15 @@
 	  <None Remove="Resources\Images\password.png" />
 	  <None Remove="Resources\Images\user.png" />
 	  <None Remove="Resources\Raw\index.html" />
+	  <None Remove="Resources\Splash\splash.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <AndroidAsset Include="Resources\Raw\index.html" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiSplashScreen Include="Resources\Splash\spl.jpg" Color="#EEEDEB" BaseSize="320,568" />
 	</ItemGroup>
 
 	<ItemGroup>

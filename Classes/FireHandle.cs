@@ -20,7 +20,6 @@ namespace SmartCAN
         public User Admin { get; set; }
         public FireHandle() { 
             FirebaseClient = new FirebaseClient("https://projet-iot-2ing2-default-rtdb.europe-west1.firebasedatabase.app/");
-            
         }
 
         public async void AdminDownload()
@@ -32,8 +31,8 @@ namespace SmartCAN
         {
             Users.Clear();
             string path = "Users/Normal/";
-            int i = 1;
             NombreUser = await FirebaseClient.Child("Users/Nombre_Users").OnceSingleAsync<int>();
+            int i = 1;
             var normalUser = await FirebaseClient.Child(path + i.ToString()).OnceSingleAsync<User>();
             while (i<=NombreUser)
             {
@@ -52,9 +51,9 @@ namespace SmartCAN
             Cans.Clear();
             string path = "carte/Poubelle";
 
-            int Nombre_Poubelle = await FirebaseClient.Child("carte/Nombre_Poubelle").OnceSingleAsync<int>();
+            NombrePoubelle = await FirebaseClient.Child("carte/Nombre_Poubelle").OnceSingleAsync<int>();
 
-            for (int i = 1; i <= Nombre_Poubelle; i++)
+            for (int i = 1; i <= NombrePoubelle; i++)
             {
 
                 var Poubelle = await FirebaseClient.Child(path + i.ToString()).OnceSingleAsync<Can>();
@@ -75,28 +74,37 @@ namespace SmartCAN
                 await FirebaseClient.Child(path + id.ToString()).DeleteAsync();
                 return (true);
             }
-            catch (Firebase.Database.FirebaseException ex)
+            catch (Firebase.Database.FirebaseException)
             {
                 return false;
             }
         }
-        public bool DeleteUser(int id)
+        public async Task<bool> DeleteUser(User user)
         {
-            bool Ok = (bool)DeleteUserFirebase(id).Result;
+            bool Ok = await DeleteUserFirebase(user.Id);
             if(Ok)
             {
-                var U = Users.FirstOrDefault(u => u.Id == id);
-                Users.Remove(U);
-                return (Ok);
+                Users.Remove(user);
+                return true;
             }
             return false;
         }
+        public async Task<bool> AddNewClient(User u)
+        {
+            bool result = await Task.Run(() =>
+            {
+                FirebaseClient.Child($"Users/Normal/{u.Id}").PutAsync(u);
+                return true;
+            });
 
-        public async Task<bool> AddClient(int id, User u)
+            return result;
+        }
+        public async Task<bool> ModifyClient(int id, User u)
         {
             bool result = await Task.Run(() =>
             {
                 DeleteUserFirebase(id);
+                Users.Remove(u);
                 Users.Add(u);
                 FirebaseClient.Child($"Users/Normal/{id}").PutAsync(u);
                 return true;
@@ -104,7 +112,31 @@ namespace SmartCAN
 
             return result;
         }
-
-
+        public async Task<bool> DeleteCanFirebase(int id)
+        {
+            try
+            {
+                await FirebaseClient
+                    .Child("carte")  
+                    .Child("Poubelle" + id.ToString())
+                    .DeleteAsync();
+                return (true);
+            }
+            catch (Firebase.Database.FirebaseException ex)
+            {
+                return false;
+            }
+        }
+        public async Task<bool> DeleteCan(Can poubelle)
+        {
+            bool Ok = await DeleteCanFirebase(poubelle.Id);
+            if (Ok)
+            {
+                Cans.Remove(poubelle);
+                return true;
+            }
+            return false;
+        }
+        
     }
 }

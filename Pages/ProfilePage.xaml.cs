@@ -60,7 +60,6 @@ public partial class ProfilePage : ContentPage
     private async void Save(object sender, EventArgs e)
     {
         FireHandle FH = new FireHandle();
-
         Debug.WriteLine("Save button clicked."); // Check if this line is printed
 
         if (string.IsNullOrEmpty(pass.Text) && string.IsNullOrEmpty(passNew.Text))
@@ -77,7 +76,7 @@ public partial class ProfilePage : ContentPage
             {
                 Profil.Email = mail.Text;
             }
-            await FH.AddClient(Profil.Id, Profil);
+            await FH.ModifyClient(Profil.Id, Profil);
         }
         else if((!string.IsNullOrEmpty(pass.Text) && !string.IsNullOrEmpty(passNew.Text))){
             if((passNew.Text != Profil.mdp) && (pass.Text == Profil.mdp))
@@ -95,18 +94,20 @@ public partial class ProfilePage : ContentPage
                     Profil.Email = mail.Text;
                 }
                 Profil.mdp = passNew.Text;
-                await FH.AddClient(Profil.Id, Profil);
+                await FH.ModifyClient(Profil.Id, Profil);
             }
         }
     }
+
+    public event EventHandler DisconnectButtonClicked;
+
     public async void Disconnect(object sender, EventArgs e)
     {
+        DisconnectButtonClicked?.Invoke(this, EventArgs.Empty);
 
-        if (Navigation != null)
-        {
-            await Navigation.PopModalAsync();
-        }
     }
+
+
 
 
 }

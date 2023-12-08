@@ -13,13 +13,26 @@ public partial class SignInPage : ContentPage
     FireHandle FH = new FireHandle();
 
     public SignInPage()
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
         BindingContext = this;
-	}
+    }
 
-	private async void TapGestureRecognizer_Tapped_For_SignUP(object sender, EventArgs e)
-	{
+    private async void TapGestureRecognizer_Tapped_For_SignUP(object sender, EventArgs e)
+    {
+        var navigationStack = Navigation.NavigationStack;
+
+        if (navigationStack != null)
+        {
+            foreach (var page in navigationStack)
+            {
+                if (page != null)
+                {
+                    Debug.WriteLine($"Page Type: {page.GetType().Name}");
+                    // You can add more information as needed, such as page titles or other properties
+                }
+            }
+        } 
         await Navigation.PushModalAsync(new SignUpPage());
     }
 
@@ -28,7 +41,7 @@ public partial class SignInPage : ContentPage
         if (string.IsNullOrEmpty(mail.Text) || string.IsNullOrEmpty(mdp.Text))
         {
 
-               await DisplayAlert("Erreur", "Veuillez vérifier vos données", "OK");
+            await DisplayAlert("Erreur", "Veuillez vérifier vos données", "OK");
 
         }
         else
@@ -39,8 +52,14 @@ public partial class SignInPage : ContentPage
             int test = await VerifAsync(Pass, email);
             if (test == 0 || test == 3)
             {
-                await Navigation.PushModalAsync(new AppShell(test, NormalUser));
-                mail.Text = string.Empty; mdp.Text = string.Empty;
+                mail.Text = string.Empty;
+                mdp.Text = string.Empty;
+                if (Navigation != null)
+                {
+                    await Navigation.PushModalAsync(new AppShell(test, NormalUser));
+                }
+
+
             }
             else if (test == 1)
             {
@@ -51,8 +70,8 @@ public partial class SignInPage : ContentPage
                 await DisplayAlert("Erreur", "Veuillez vérifier vos données", "OK");
 
             }
-        };  
-        }
+        };
+    }
 
 
 
@@ -82,8 +101,9 @@ public partial class SignInPage : ContentPage
                     return 1;
                 }
 
-                if (FH.Admin.Email == email && FH.Admin.mdp == password)
+                if (FH.Admin.Email.ToLower() == email && FH.Admin.mdp == password)
                 {
+                    NormalUser = FH.Admin;
                     return 3;
                 }
                 return 2;
@@ -106,9 +126,25 @@ public partial class SignInPage : ContentPage
     }
     protected override void OnAppearing()
     {
-        base.OnAppearing();
-        FH.DownloadAllClients();
-        FH.AdminDownload();
-    }
 
+        try
+        {
+            base.OnAppearing();
+
+            if (Navigation != null)
+            {
+                Task.Run(async () =>
+                {
+                    FH.DownloadAllClients();
+                    FH.AdminDownload();
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle or log the exception
+            Debug.WriteLine("Exception in OnAppearing: " + ex.Message);
+        }
+
+    }
 }

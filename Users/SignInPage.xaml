@@ -4,7 +4,7 @@
              x:Class="SmartCAN.SignInPage"
              xmlns:handless="clr-namespace:SmartCAN.Handlers">
     <Grid RowDefinitions="1*,8*,1*">
-        <Frame BackgroundColor="#cfd0d8" Grid.Row="0" HorizontalOptions="EndAndExpand"
+        <Frame BackgroundColor="{x:StaticResource Tertiary}" Grid.Row="0" HorizontalOptions="EndAndExpand"
                Padding="0" 
                Margin="0,-80,-80,0"
                HeightRequest="250"

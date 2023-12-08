@@ -2,11 +2,13 @@ namespace SmartCAN;
 
 using Firebase.Database;
 using Firebase.Database.Query;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 public partial class SignUpPage : ContentPage
 {
+    FireHandle FH = new FireHandle();
 
 	public SignUpPage()
 	{
@@ -16,7 +18,21 @@ public partial class SignUpPage : ContentPage
 
 	private async void TapGestureRecognizer_Tapped_For_SignIn(object sender, EventArgs e)
 	{
-		await Navigation.PopModalAsync();
+
+        var navigationStack = Navigation.NavigationStack;
+
+        if (navigationStack != null)
+        {
+            foreach (var page in navigationStack)
+            {
+                if (page != null)
+                {
+                    Debug.WriteLine($"Page Type: {page.GetType().Name}");
+                    // You can add more information as needed, such as page titles or other properties
+                }
+            }
+        }
+        await Navigation.PopModalAsync();
     }
 
     private async void Button_Clicked(object sender, EventArgs e)
@@ -40,16 +56,17 @@ public partial class SignUpPage : ContentPage
             }
 
 
-            FirebaseClient client = new FirebaseClient("https://projet-iot-2ing2-default-rtdb.europe-west1.firebasedatabase.app/");
-
-            var emplacement = await client.Child("Users/Nombre_Users").OnceSingleAsync<int>();
+            var emplacement = await FH.FirebaseClient.Child("Users/Nombre_Users").OnceSingleAsync<int>();
             emplacement++;
-            await client.Child("Users/Nombre_Users").PutAsync(emplacement);
-            await client.Child($"Users/Normal/{emplacement}").PutAsync(new User { 
-                Approved = false, 
-                Email = Mail, 
-                mdp = MDP, 
-                Nom = Nom, 
+            await FH.FirebaseClient.Child("Users/Nombre_Users").PutAsync(emplacement);
+            FH.AddNewClient(new User
+            {
+                Id = emplacement,
+                NotApproved = true,
+                Approved = false,
+                Email = Mail,
+                mdp = MDP,
+                Nom = Nom,
                 Tel = int.Parse(Tel)
             });
 

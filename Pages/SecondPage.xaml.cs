@@ -23,13 +23,17 @@ public partial class SecondPage : ContentPage
     private async void OnDeleteClicked(object sender, EventArgs e)
     {
         var button = (ImageButton)sender;
-        User V = button?.BindingContext as User;
-        if (V != null)
+        User userToDelete = button?.BindingContext as User;
+
+        if (userToDelete != null)
         {
-            bool ok = await DisplayAlert("Supprimer", "Etes-vous sûr ?", "OK", "Annuler");
-            if (ok)
+            bool userConfirmedDeletion = await DisplayAlert("Confirmation", $"Voulez-vous vraiment supprimer l'utilisateur {userToDelete.Nom} ?", "Oui", "Non");
+
+            if (userConfirmedDeletion)
             {
-                bool deletionResult = FH.DeleteUser(V.Id);
+
+                bool deletionResult = await FH.DeleteUser(userToDelete);
+
 
                 if (deletionResult)
                 {

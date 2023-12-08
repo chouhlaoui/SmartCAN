@@ -6,11 +6,20 @@ namespace SmartCAN;
 public partial class FourthPage : ContentPage
 {
     FireHandle FH = new FireHandle();
+    int Role;
     protected override void OnAppearing()
     {
         base.OnAppearing();
         FH.DownloadAllCans();
         PoubelleListView.ItemsSource = FH.Cans;
+        if (Role == 0)
+        {
+            Activate = false;
+        }
+        else
+        {
+            Activate = true;
+        }
     }
     public bool Activate {
         get { return _Activate; }
@@ -25,12 +34,11 @@ public partial class FourthPage : ContentPage
     }
     private bool _Activate;
 
-    [Obsolete]
     public FourthPage(User user, int role)
 	{
-        Debug.WriteLine("This is poubelle : ", user.ToString());
+        Role = role;
 
-        if (role == 0)
+        if (Role == 0)
         {
             Activate = false;
         }
@@ -38,6 +46,7 @@ public partial class FourthPage : ContentPage
         {
             Activate = true;
         }
+        
 		InitializeComponent();
         ListePoubelles.VerticalOptions = LayoutOptions.FillAndExpand;
         BindingContext = this;
@@ -48,10 +57,10 @@ public partial class FourthPage : ContentPage
         Can V = button?.BindingContext as Can;
         if (V != null)
         {
-            bool ok = await DisplayAlert("Supprimer", "Etes-vous sûr ?", "OK", "Annuler");
+            bool ok = await DisplayAlert("Confirmation", $"Voulez-vous vraiment supprimer la Poubelle {V.Id} ?", "Oui", "Non");
             if (ok)
             {
-                bool deletionResult = false;
+                bool deletionResult = await FH.DeleteCan(V);
 
                 if (deletionResult)
                 {
@@ -62,6 +71,26 @@ public partial class FourthPage : ContentPage
                     // Handle the case where deletion failed
                     await DisplayAlert("Error", "Erreur lors de la suppression", "OK");
                 }
+            }
+        }
+    }
+
+    private void OnLocationClicked(object sender, EventArgs e)
+    {
+        var button = (ImageButton)sender;
+        Can V = button?.BindingContext as Can;
+        if (V != null)
+        {
+            string latitude = V.Latitude;
+            string longitude = V.Langitude;
+
+            if (!string.IsNullOrEmpty(latitude) && !string.IsNullOrEmpty(longitude))
+            {
+                // Construire l'URI pour ouvrir la localisation dans Google Maps
+                string uri = $"geo:{latitude},{longitude}?q={latitude},{longitude}({Uri.EscapeDataString("Label de la localisation")})";
+
+                // Ouvrir l'URI avec le launcher
+                Launcher.OpenAsync(new Uri(uri));
             }
         }
     }

@@ -7,7 +7,6 @@ public partial class AppShell : Shell
 {
     public AppShell(int role, User user)
     {
-        Debug.WriteLine("This is AppShell : ",user.ToString());
         InitializeComponent();
         
         if (role == 0)
@@ -17,6 +16,7 @@ public partial class AppShell : Shell
             AddTab("Poubelles", "FourthPage", "email.png", user, role, typeof(FourthPage));
             AddTab("Notifications", "ThirdPage", "notification.png", user, role, typeof(ThirdPage));
             AddTab("Profil", "ProfilePage", "profile.png", user, role, typeof(ProfilePage));
+            
         }
         else
         {
@@ -33,8 +33,30 @@ public partial class AppShell : Shell
 
 
     }
+    private async void OnDisconnectButtonClicked(object sender, EventArgs e)
+    {
+        var navigationStack = Navigation.NavigationStack;
 
-    void AddTab(string title, string pageName,string image, User user, int role, Type pageType)
+        if (navigationStack != null)
+        {
+            foreach (var page in navigationStack)
+            {
+                if (page != null)
+                {
+                    Debug.WriteLine($"Page Type: {page.GetType().Name}");
+                    // You can add more information as needed, such as page titles or other properties
+                }
+            }
+        }
+
+        if (Navigation != null)
+        {
+            
+            await Navigation.PopModalAsync();
+            
+        }
+    }
+    void AddTab(string title, string pageName, string image, User user, int role, Type pageType)
     {
         var tab = new Tab
         {
@@ -43,15 +65,29 @@ public partial class AppShell : Shell
             Icon = image
         };
 
+        Page page;
+
+        if (pageType == typeof(ProfilePage))
+        {
+            var profilePage = new ProfilePage(user, role);
+            profilePage.DisconnectButtonClicked += OnDisconnectButtonClicked;
+            page = profilePage;
+        }
+        else
+        {
+            page = Activator.CreateInstance(pageType, user, role) as Page;
+        }
 
         var shellContent = new ShellContent
         {
-            Content = Activator.CreateInstance(pageType, user, role) as Page, // Passer l'utilisateur au constructeur
+            Content = page,
             Route = title
         };
 
         tab.Items.Add(shellContent);
         AppTabs.Items.Add(tab);
     }
+
+    
 }
 

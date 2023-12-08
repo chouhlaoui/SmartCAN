@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:SmartCAN"
     Shell.FlyoutBehavior="Disabled">
 
+    
     <TabBar x:Name="AppTabs" >
        
     </TabBar>
