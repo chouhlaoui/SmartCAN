@@ -21,7 +21,7 @@
 
         </Frame>
 
-        <Frame ZIndex="1" CornerRadius="0" BackgroundColor="{x:StaticResource DashboardBackground}"
+        <Frame ZIndex="1" CornerRadius="0" 
                Grid.Row="1" VerticalOptions="CenterAndExpand"
                Margin="0,0,40,0"
                >

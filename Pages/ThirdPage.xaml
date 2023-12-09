@@ -3,10 +3,36 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SmartCAN.ThirdPage"
             >
-    <VerticalStackLayout>
-        <Label 
-            Text="Notifications des poubelles"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <ListView x:Name="notificationListView">
+            <ListView.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="6*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="Horaire" FontAttributes="Bold" FontSize="Large" HorizontalOptions="CenterAndExpand" Grid.Column="0"/>
+                    <Label Text="Titre" FontAttributes="Bold" FontSize="Large" HorizontalOptions="CenterAndExpand" Grid.Column="1"/>
+                </Grid>
+            </ListView.Header>
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="6*"/>
+
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="{Binding Created}" Grid.Column="0"/>
+                            <Label Text="{Binding title}" FontAttributes="Bold" Grid.Column="1"/>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ScrollView>
 </ContentPage>

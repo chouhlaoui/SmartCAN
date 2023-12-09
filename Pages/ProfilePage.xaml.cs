@@ -61,25 +61,9 @@ public partial class ProfilePage : ContentPage
     {
         FireHandle FH = new FireHandle();
         Debug.WriteLine("Save button clicked."); // Check if this line is printed
-
-        if (string.IsNullOrEmpty(pass.Text) && string.IsNullOrEmpty(passNew.Text))
+        await Task.Run(() =>
         {
-            if (!string.IsNullOrEmpty(tel.Text))
-            {
-                Profil.Tel = int.Parse(tel.Text);
-            }
-            if (!string.IsNullOrEmpty(nom.Text))
-            {
-                Profil.Nom = nom.Text;
-            }
-            if (!string.IsNullOrEmpty(mail.Text))
-            {
-                Profil.Email = mail.Text;
-            }
-            await FH.ModifyClient(Profil.Id, Profil);
-        }
-        else if((!string.IsNullOrEmpty(pass.Text) && !string.IsNullOrEmpty(passNew.Text))){
-            if((passNew.Text != Profil.mdp) && (pass.Text == Profil.mdp))
+            if (string.IsNullOrEmpty(pass.Text) && string.IsNullOrEmpty(passNew.Text))
             {
                 if (!string.IsNullOrEmpty(tel.Text))
                 {
@@ -93,10 +77,30 @@ public partial class ProfilePage : ContentPage
                 {
                     Profil.Email = mail.Text;
                 }
-                Profil.mdp = passNew.Text;
-                await FH.ModifyClient(Profil.Id, Profil);
+                FH.ModifyClient(Profil.Id, Profil);
             }
-        }
+            else if ((!string.IsNullOrEmpty(pass.Text) && !string.IsNullOrEmpty(passNew.Text)))
+            {
+                if ((passNew.Text != Profil.mdp) && (pass.Text == Profil.mdp))
+                {
+                    if (!string.IsNullOrEmpty(tel.Text))
+                    {
+                        Profil.Tel = int.Parse(tel.Text);
+                    }
+                    if (!string.IsNullOrEmpty(nom.Text))
+                    {
+                        Profil.Nom = nom.Text;
+                    }
+                    if (!string.IsNullOrEmpty(mail.Text))
+                    {
+                        Profil.Email = mail.Text;
+                    }
+                    Profil.mdp = passNew.Text;
+                    FH.ModifyClient(Profil.Id, Profil);
+                }
+            }
+        });
+        
     }
 
     public event EventHandler DisconnectButtonClicked;

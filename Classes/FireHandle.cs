@@ -1,8 +1,11 @@
 ﻿using Firebase.Database;
 using Firebase.Database.Query;
+using Plugin.LocalNotification;
+using SmartCAN.Classes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,8 +21,84 @@ namespace SmartCAN
         public int NombreUser;
         public int NombrePoubelle;
         public User Admin { get; set; }
+        public ObservableCollection<Notification> notificationCollection = new ObservableCollection<Notification>();
+
         public FireHandle() { 
             FirebaseClient = new FirebaseClient("https://projet-iot-2ing2-default-rtdb.europe-west1.firebasedatabase.app/");
+        }
+        public async Task Subscribe()
+        {
+            notificationCollection.Clear();
+            int i = 1;
+            NombrePoubelle = await FirebaseClient.Child("carte/Nombre_Poubelle").OnceSingleAsync<int>();
+
+            while (i <= NombrePoubelle)
+            {
+                try
+                {
+                    SubscribeToPoubelle("Poubelle" + i.ToString());
+                    i++;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"An error occurred during SubscribeToPoubelle: {ex.Message}");
+                }
+            }
+        }
+
+        private void SubscribeToPoubelle(string poubelleName)
+        {
+            var observable = FirebaseClient
+                .Child($"carte/{poubelleName}")
+                .AsObservable<string>()
+                .Subscribe(d =>
+                {
+                    if (d != null)
+                    {
+                        
+
+                        if (d.Key == "Ultrason")
+                        {
+                            if (double.Parse(d.Object) > 3000)
+                            {
+                                notificationCollection.Add(new Notification
+                                {
+                                    title = $"Changement d'état détecté pour {poubelleName}",
+                                    message = $"{d.Key} a detecté une saturation pour cette poubelle.\nVeuillez depecher !",
+                                    Created = DateTime.Now.ToString("yyyy-MM-dd \n HH:mm:ss"),
+                                });
+                                SendNotification($"Changement d'état détecté pour {poubelleName}", $"{d.Key} a detecté une saturation pour cette poubelle.\nVeuillez depecher !");
+                            }
+                        }
+                        else
+                        {
+                            notificationCollection.Add(new Notification
+                            {
+                                title = $"Changement d'état détecté pour {poubelleName}",
+                                message = $"{d.Key} a detecté un changement d'mplacement pour cette poubelle.\nVeuillez verifier !",
+                                Created = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                            });
+                            SendNotification($"Changement d'état détecté pour {poubelleName}", $"{d.Key} a detecté un changement d'mplacement pour cette poubelle.\nVeuillez verifier !");
+                        }
+
+                    }
+                });
+        }
+
+
+        public void SendNotification(string title, string message)
+        {
+            var notification = new NotificationRequest
+            {
+                Title = title,
+                Description = message,
+                Schedule = new NotificationRequestSchedule
+                {
+                    NotifyTime = DateTime.Now,
+                }
+            };
+
+            LocalNotificationCenter.Current.Show(notification);
         }
 
         public async void AdminDownload()
@@ -122,7 +201,7 @@ namespace SmartCAN
                     .DeleteAsync();
                 return (true);
             }
-            catch (Firebase.Database.FirebaseException ex)
+            catch (Firebase.Database.FirebaseException)
             {
                 return false;
             }

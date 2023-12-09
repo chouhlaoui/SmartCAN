@@ -10,16 +10,10 @@ public partial class FourthPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        FH.DownloadAllCans();
+        // Download Cans in the background
+        Task.Run(() => FH.DownloadAllCans()).Wait();
         PoubelleListView.ItemsSource = FH.Cans;
-        if (Role == 0)
-        {
-            Activate = false;
-        }
-        else
-        {
-            Activate = true;
-        }
+        Activate = Role != 0;
     }
     public bool Activate {
         get { return _Activate; }

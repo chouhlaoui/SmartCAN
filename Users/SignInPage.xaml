@@ -20,7 +20,7 @@
 
         </Frame>
 
-        <Frame CornerRadius="10" BackgroundColor="{x:StaticResource DashboardBackground}"
+        <Frame CornerRadius="10" 
                Grid.Row="1" VerticalOptions="CenterAndExpand"
                HorizontalOptions="CenterAndExpand"
                Margin="0,0,40,0"
