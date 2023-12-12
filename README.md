@@ -1,4 +1,4 @@
-# SmartCan Project
+# SmartCan
 
 ## Overview
 
@@ -60,7 +60,7 @@ To use this project, configure your Firebase database with the following structu
     - **Tel:** Admin Telephone
     - **mdp:** Admin Password
 
-### Carte (Map)
+### Carte (Hardware)
 
 - **Nombre_poubelle (Number of Bins):** digit
 
@@ -70,18 +70,14 @@ To use this project, configure your Firebase database with the following structu
   - **Latitude:** float (Bin Latitude)
   - **Ultrason:** float (Ultrasonic sensor data for the bin)
 
-## How to Configure Firebase
+### How to Configure Firebase
 
 1. **Create a Firebase Project:**
    - Visit the [Firebase Console](https://console.firebase.google.com/).
    - Click on "Add Project" and follow the setup instructions.
 
-2. **Enable Firebase Authentication:**
-   - In the Firebase Console, navigate to the "Authentication" section.
-   - Enable the sign-in method (email/password) for user authentication.
-
 3. **Set Up Realtime Database:**
-   - In the Firebase Console, navigate to the "Database" section.
+
    - Create a new Realtime Database.
    - Use the provided structure to set up the database.
 
@@ -91,19 +87,33 @@ To use this project, configure your Firebase database with the following structu
 5. **Firebase Configuration in Project:**
    - Update your SmartCan project configuration to include the Firebase SDK and connection details.
 
-## Example Firebase Configuration (JavaScript):
+## Authentication and Registration
+ **Authentication :**
+   - The application has an authentication system to secure user and admin access.
 
-```javascript
-// Initialize Firebase
-var firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "your-project-id.firebaseapp.com",
-  databaseURL: "https://your-project-id.firebaseio.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project-id.appspot.com",
-  messagingSenderId: "your-messaging-sender-id",
-  appId: "your-app-id",
-};
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+ **Registration Approval :**
+   - Admin must approve new employee accounts before they can log in.
+
+## Technologies Used
+
+ **Mapping :**
+   - **OpenStreetMap** for mapping.
+
+
+ **Navigation**
+   - Google Maps for route planning.
+## How to Run
+
+1. Clone the repository.
+2. Install the required dependencies.
+3. Configure authentication and registration settings.
+4. Run the application.
+
+## Contributors
+
+- Chourouk Lahlaoui
+
+## License
+
+Feel free to contribute and make SmartCan even better!
