@@ -34,7 +34,15 @@ SmartCan is an innovative IoT project that brings intelligence to waste manageme
 
 - **Profile Management:**
   - Users and Admins can modify their personal information through a profile page.
+    
+## Technology Stack
 
+- **.NET MAUI:**
+  - A modern cross-platform framework for building native applications.
+
+- **Firebase Realtime Database:**
+  - Cloud-hosted NoSQL database to store and sync data in real-time.
+  
 ## Firebase Configuration
 
 To use this project, configure your Firebase database with the following structure:
