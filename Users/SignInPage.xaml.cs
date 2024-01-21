@@ -29,7 +29,6 @@ public partial class SignInPage : ContentPage
                 if (page != null)
                 {
                     Debug.WriteLine($"Page Type: {page.GetType().Name}");
-                    // You can add more information as needed, such as page titles or other properties
                 }
             }
         } 
@@ -58,8 +57,6 @@ public partial class SignInPage : ContentPage
                 {
                     await Navigation.PushModalAsync(new AppShell(test, NormalUser));
                 }
-
-
             }
             else if (test == 1)
             {
@@ -72,9 +69,6 @@ public partial class SignInPage : ContentPage
             }
         };
     }
-
-
-
 
     private async Task<int> VerifAsync(string password, string email)
     {
@@ -126,7 +120,6 @@ public partial class SignInPage : ContentPage
     }
     protected override void OnAppearing()
     {
-
         try
         {
             base.OnAppearing();
@@ -142,7 +135,6 @@ public partial class SignInPage : ContentPage
         }
         catch (Exception ex)
         {
-            // Handle or log the exception
             Debug.WriteLine("Exception in OnAppearing: " + ex.Message);
         }
 

@@ -20,14 +20,6 @@ public partial class App : Application
             }
         });
 
-        MainPage = new Microsoft.Maui.Controls.NavigationPage(new SignInPage());
-
-        /*
-         *  MainPage = new Microsoft.Maui.Controls.NavigationPage(new AppShell(1,new User
-            { Id = 0,Approved=true,Email="a",mdp="jn",Nom="kd",NotApproved=false,Tel=5615}
-        )
-            );
-         */
-         
+        MainPage = new Microsoft.Maui.Controls.NavigationPage(new SignInPage());         
     }
 }

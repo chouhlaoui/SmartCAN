@@ -8,7 +8,6 @@ public partial class ThirdPage : ContentPage
 	public ThirdPage(User user, int role)
     {
 		InitializeComponent();
-        //InitializePageAsync();
 
     }
     protected override async void OnAppearing()
@@ -21,8 +20,6 @@ public partial class ThirdPage : ContentPage
         }
         catch (Exception ex)
         {
-            // Handle or log the exception
-            Debug.WriteLine("Exception in OnAppearing: " + ex.Message);
         }
 
     }
@@ -30,17 +27,13 @@ public partial class ThirdPage : ContentPage
     {
         try
         {
-            // If Subscribe involves asynchronous operations, await it
             await FH.Subscribe();
-
-            // Populate notificationListView
             notificationListView.ItemsSource = FH.notificationCollection;
             return true;
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"An error occurred during initialization: {ex.Message}");
-            // Handle or log the exception as needed
             return false;
         }
     }

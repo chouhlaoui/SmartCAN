@@ -20,19 +20,14 @@ public partial class AppShell : Shell
         }
         else
         {
-            Debug.WriteLine("USer is : ", user.Email, "+", user.Tel, "+", user.Nom);
-
             AddTab("Maps", "Maps", "localisation.png", user, role, typeof(Maps));
-
             AddTab("Employés", "SecondPage", "groupe.png", user, role, typeof(SecondPage));
             AddTab("Poubelles", "FourthPage", "email.png", user, role, typeof(FourthPage));
-           
             AddTab("Notifications", "notification.png", "ThirdPage", user, role, typeof(ThirdPage));
             AddTab("Profil", "ProfilePage", "profile.png", user, role, typeof(ProfilePage));
         }
-
-
     }
+    
     private async void OnDisconnectButtonClicked(object sender, EventArgs e)
     {
         var navigationStack = Navigation.NavigationStack;
@@ -44,18 +39,17 @@ public partial class AppShell : Shell
                 if (page != null)
                 {
                     Debug.WriteLine($"Page Type: {page.GetType().Name}");
-                    // You can add more information as needed, such as page titles or other properties
                 }
             }
         }
 
         if (Navigation != null)
         {
-            
             await Navigation.PopModalAsync();
             
         }
     }
+    
     void AddTab(string title, string pageName, string image, User user, int role, Type pageType)
     {
         var tab = new Tab
@@ -87,7 +81,4 @@ public partial class AppShell : Shell
         tab.Items.Add(shellContent);
         AppTabs.Items.Add(tab);
     }
-
-    
 }
-

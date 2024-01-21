@@ -28,7 +28,6 @@ public partial class SignUpPage : ContentPage
                 if (page != null)
                 {
                     Debug.WriteLine($"Page Type: {page.GetType().Name}");
-                    // You can add more information as needed, such as page titles or other properties
                 }
             }
         }
@@ -72,9 +71,6 @@ public partial class SignUpPage : ContentPage
 
             await DisplayAlert("OK", "Votre demande est bien enregistré et elle sera traité par administrateur ! ", "OK");
             await Navigation.PopModalAsync();
-
-
-
         }
 
     }

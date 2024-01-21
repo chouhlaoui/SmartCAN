@@ -60,7 +60,6 @@ public partial class ProfilePage : ContentPage
     private async void Save(object sender, EventArgs e)
     {
         FireHandle FH = new FireHandle();
-        Debug.WriteLine("Save button clicked."); // Check if this line is printed
         await Task.Run(() =>
         {
             if (string.IsNullOrEmpty(pass.Text) && string.IsNullOrEmpty(passNew.Text))
@@ -108,7 +107,6 @@ public partial class ProfilePage : ContentPage
     public async void Disconnect(object sender, EventArgs e)
     {
         DisconnectButtonClicked?.Invoke(this, EventArgs.Empty);
-
     }
 
 

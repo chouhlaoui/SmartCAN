@@ -12,13 +12,8 @@ public partial class SecondPage : ContentPage
 	{
 		InitializeComponent();
         ListeUsers.VerticalOptions = LayoutOptions.FillAndExpand;
-        Debug.WriteLine("This is Users page : ", user.ToString());
-
-
         BindingContext = this;
-
     }
-
 
     private async void OnDeleteClicked(object sender, EventArgs e)
     {
@@ -31,9 +26,7 @@ public partial class SecondPage : ContentPage
 
             if (userConfirmedDeletion)
             {
-
                 bool deletionResult = await FH.DeleteUser(userToDelete);
-
 
                 if (deletionResult)
                 {
@@ -41,7 +34,6 @@ public partial class SecondPage : ContentPage
                 }
                 else
                 {
-                    // Handle the case where deletion failed
                     await DisplayAlert("Error", "Erreur lors de la suppression", "OK");
                 }
             }
@@ -61,7 +53,6 @@ public partial class SecondPage : ContentPage
             userListView.ItemsSource = null;
             userListView.ItemsSource = FH.Users;
             await FH.FirebaseClient.Child($"Users/Normal/{V.Id.ToString()}/Approved").PutAsync(FH.Users.FirstOrDefault(x => x.Id == V.Id).Approved);
-
         }
     }
 

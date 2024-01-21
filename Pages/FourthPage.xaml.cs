@@ -7,14 +7,7 @@ public partial class FourthPage : ContentPage
 {
     FireHandle FH = new FireHandle();
     int Role;
-    protected override void OnAppearing()
-    {
-        base.OnAppearing();
-        // Download Cans in the background
-        Task.Run(() => FH.DownloadAllCans()).Wait();
-        PoubelleListView.ItemsSource = FH.Cans;
-        Activate = Role != 0;
-    }
+
     public bool Activate {
         get { return _Activate; }
         set
@@ -45,6 +38,14 @@ public partial class FourthPage : ContentPage
         ListePoubelles.VerticalOptions = LayoutOptions.FillAndExpand;
         BindingContext = this;
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        Task.Run(() => FH.DownloadAllCans()).Wait();
+        PoubelleListView.ItemsSource = FH.Cans;
+        Activate = Role != 0;
+    }
     private async void OnDeleteClicked(object sender, EventArgs e)
     {
         var button = (ImageButton)sender;
@@ -62,7 +63,6 @@ public partial class FourthPage : ContentPage
                 }
                 else
                 {
-                    // Handle the case where deletion failed
                     await DisplayAlert("Error", "Erreur lors de la suppression", "OK");
                 }
             }
@@ -80,10 +80,7 @@ public partial class FourthPage : ContentPage
 
             if (!string.IsNullOrEmpty(latitude) && !string.IsNullOrEmpty(longitude))
             {
-                // Construire l'URI pour ouvrir la localisation dans Google Maps
                 string uri = $"geo:{latitude},{longitude}?q={latitude},{longitude}({Uri.EscapeDataString("Label de la localisation")})";
-
-                // Ouvrir l'URI avec le launcher
                 Launcher.OpenAsync(new Uri(uri));
             }
         }
